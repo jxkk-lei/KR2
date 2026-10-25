@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Отгрузки со склада: доки, партии грузов и статистика в одном месте.">
+    <meta name="theme-color" content="#202b2a">
+    <title>{% block title %}Обзор{% endblock %} · Отгрузки со склада</title>
+    <link rel="icon" type="image/png" href="{% static 'img/logo.png' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="{% static 'js/main.js' %}" defer></script>
+</head>
+<body>
+{% include 'includes/icons.html' %}
+<a class="skip-link" href="#main-content">Перейти к содержимому</a>
+<button class="nav-backdrop" type="button" data-nav-close aria-label="Закрыть навигацию" hidden></button>
+<aside class="sidebar" id="sidebar" aria-label="Основная навигация">
+    <a class="brand" href="{% url 'homepage:home' %}" aria-label="Отгрузки со склада — главная">
+        <img src="{% static 'img/logo.png' %}" width="44" height="44" alt="Логотип склада">
+        <span><strong>СКЛАД<span class="brand-dot">.</span></strong><small>Логистика в порядке</small></span>
+    </a>
+    <div class="sidebar-label">РАБОЧЕЕ ПРОСТРАНСТВО</div>
+    <nav class="main-nav">
+        <a href="{% url 'homepage:home' %}" {% if request.resolver_match.namespace == 'homepage' %}class="active" aria-current="page"{% endif %}>
+            <svg><use href="#i-grid"></use></svg><span>Обзор склада</span>
+        </a>
+        <a href="{% url 'docks:list' %}" {% if request.resolver_match.namespace == 'docks' %}class="active" aria-current="page"{% endif %}>
+            <svg><use href="#i-dock"></use></svg><span>Доки</span>
+        </a>
+        <a href="{% url 'shipments:list' %}" {% if request.resolver_match.namespace == 'shipments' and request.resolver_match.url_name != 'statistics' %}class="active" aria-current="page"{% endif %}>
+            <svg><use href="#i-truck"></use></svg><span>Отгрузки</span>
+        </a>
+        <a href="{% url 'shipments:statistics' %}" {% if request.resolver_match.url_name == 'statistics' %}class="active" aria-current="page"{% endif %}>
+            <svg><use href="#i-chart"></use></svg><span>Статистика</span>
+        </a>
+    </nav>
+    <div class="sidebar-note">
+        <span class="sidebar-note-icon"><svg><use href="#i-box"></use></svg></span>
+        <strong>Каждая партия на месте</strong>
+        <p>От первого палета<br>до последней отгрузки.</p>
+        <a href="{% url 'shipments:list' %}">К списку отгрузок <span aria-hidden="true">↗</span></a>
+    </div>
+    <div class="sidebar-bottom"><span class="small-logo">W</span><div><strong>Складская логистика</strong><small>Панель управления</small></div></div>
+</aside>
+<div class="workspace">
+    <header class="topbar">
+        <div class="topbar-left">
+            <button class="icon-button mobile-menu" type="button" data-nav-toggle aria-controls="sidebar" aria-expanded="false" aria-label="Открыть навигацию"><svg><use href="#i-menu"></use></svg></button>
+            <span class="workspace-label">Рабочее пространство</span><span class="breadcrumb-divider">/</span>
+            <span class="breadcrumb-current">{% block breadcrumb %}Обзор склада{% endblock %}</span>
+        </div>
+        <div class="topbar-right"><span class="today"><svg><use href="#i-calendar"></use></svg>{% now "d.m.Y" %}</span><span class="topbar-divider"></span><span class="avatar" aria-label="Складская логистика">СЛ</span></div>
+    </header>
+    <main id="main-content" tabindex="-1">
+        {% block content %}{% endblock %}
+        <footer class="page-footer"><span>Отгрузки со склада</span><span>Порядок в движении<span class="footer-dot">.</span></span></footer>
+    </main>
+</div>
+<div class="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>

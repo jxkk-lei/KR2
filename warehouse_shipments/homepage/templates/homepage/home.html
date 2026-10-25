@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}Обзор склада{% endblock %}
+{% block content %}
+<div class="page-heading">
+    <div><div class="eyebrow">ВСЁ ПОД КОНТРОЛЕМ</div><h1>Обзор склада<span class="heading-dot">.</span></h1><p>Отгрузки, доки и движение грузов — в одном месте.</p></div>
+    <a class="button button-primary" href="{% url 'shipments:list' %}">Все отгрузки <svg><use href="#i-arrow"></use></svg></a>
+</div>
+<section class="hero-banner" aria-labelledby="hero-title">
+    <div class="hero-copy"><span class="hero-label"><span></span>СКЛАДСКАЯ ЛОГИСТИКА</span><h2 id="hero-title">Порядок на складе.<br>Точность в каждой отгрузке.</h2><p>Следите за погрузкой, планируйте отправления<br class="desktop-break"> и держите важные данные под рукой.</p><a href="{% url 'docks:list' %}">Перейти к докам <svg><use href="#i-arrow"></use></svg></a></div>
+    <div class="warehouse-art" aria-hidden="true"><div class="art-orbit orbit-one"></div><div class="art-orbit orbit-two"></div><div class="art-floor"></div><div class="art-building"><div class="art-roof"></div><div class="art-wall"><span class="art-sign">СКЛАД / 31</span><div class="art-bays"><i></i><i></i><i></i></div></div></div><div class="art-box box-one"></div><div class="art-box box-two"></div><div class="art-box box-three"></div><div class="art-vehicle"><i></i><b></b><span></span></div><span class="art-caption">ДВИЖЕНИЕ В ПОРЯДКЕ ↗</span></div>
+</section>
+<section class="metrics-grid" aria-label="Сводка склада">
+    <article class="metric"><div class="metric-top"><span>Всего отгрузок</span><span class="metric-icon"><svg><use href="#i-truck"></use></svg></span></div><strong>{{ overview.total }}</strong><span class="metric-caption">Все партии в системе</span></article>
+    <article class="metric"><div class="metric-top"><span>Ожидают погрузки</span><span class="metric-icon amber"><svg><use href="#i-clock"></use></svg></span></div><strong>{{ overview.planned }}</strong><span class="metric-caption">Запланированы к отправке</span></article>
+    <article class="metric"><div class="metric-top"><span>В процессе погрузки</span><span class="metric-icon blue"><svg><use href="#i-layers"></use></svg></span></div><strong>{{ overview.loading }}</strong><span class="metric-caption">Работа идёт прямо сейчас</span></article>
+    <article class="metric"><div class="metric-top"><span>Отправлено</span><span class="metric-icon green"><svg><use href="#i-check"></use></svg></span></div><strong>{{ overview.shipped }}</strong><span class="metric-caption">Погрузка завершена</span></article>
+</section>
+<div class="section-heading"><div><h2>Сейчас на погрузке <span class="count-badge">{{ shipments|length }}</span></h2><p>Партии, с которыми работают доки.</p></div><a class="text-link" href="{% url 'shipments:list' %}?status=погружается">Смотреть все <svg><use href="#i-arrow"></use></svg></a></div>
+<section class="shipment-grid home-shipments" aria-label="Текущие отгрузки">
+    {% for shipment in shipments %}{% include 'shipments/includes/shipment_card.html' %}{% empty %}<div class="empty-state"><svg><use href="#i-truck"></use></svg><h3>Активных погрузок пока нет</h3><p>Откройте список, чтобы посмотреть запланированные партии.</p><a class="text-link" href="{% url 'shipments:list' %}">Все отгрузки →</a></div>{% endfor %}
+</section>
+<div class="home-bottom-grid">
+    <section class="panel"><div class="panel-heading"><h2>Следующие отправления</h2><svg><use href="#i-calendar"></use></svg></div><div class="schedule-list">
+        {% for shipment in upcoming %}<a class="schedule-row" href="{% url 'shipments:detail' shipment.slug %}"><span class="schedule-date"><strong>{{ shipment.ship_date|date:'d' }}</strong><small>{{ shipment.ship_date|date:'M' }}</small></span><span class="schedule-info"><strong>{{ shipment.title|truncatechars:32 }}</strong><small>{{ shipment.dock_name|default:'Док не указан' }} <span>·</span> {{ shipment.ship_date|date:'H:i' }}</small></span><span class="schedule-pallets">{{ shipment.pallets }} <small>палет</small></span><svg class="row-arrow"><use href="#i-arrow"></use></svg></a>{% empty %}<p class="inline-empty">Запланированных отгрузок нет.</p>{% endfor %}
+    </div></section>
+    <section class="panel"><div class="panel-heading"><h2>Доки склада</h2><a class="text-link" href="{% url 'docks:list' %}">Все доки ↗</a></div><div class="dock-overview-list">{% for dock in docks %}<div class="dock-overview-row"><span class="dock-mini-icon"><svg><use href="#i-dock"></use></svg></span><div><strong>{{ dock.name }}</strong><small>{{ dock.dock_kind|capfirst }} · {{ dock.capacity }} машино­мест</small></div>{% if dock.loading_count %}<span class="dock-activity"><i></i>Погрузка</span>{% else %}<span class="dock-activity idle">Нет погрузки</span>{% endif %}</div>{% empty %}<p class="inline-empty">Доки ещё не добавлены.</p>{% endfor %}</div><div class="panel-footer"><span>{{ dock_overview.total }} дока в системе</span><strong>{{ dock_overview.capacity }} машино­мест</strong></div></section>
+</div>
+{% endblock %}

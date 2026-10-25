@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}Отгрузки{% endblock %}
+{% block breadcrumb %}Отгрузки{% endblock %}
+{% block content %}
+<div class="page-heading"><div><div class="eyebrow">ДВИЖЕНИЕ ГРУЗОВ</div><h1>Отгрузки<span class="heading-dot">.</span></h1><p>Все партии, их статус и детали отправления.</p></div><a class="button button-secondary" href="{% url 'shipments:statistics' %}"><svg><use href="#i-chart"></use></svg>Статистика</a></div>
+<div class="shipment-summary"><a href="{% url 'shipments:list' %}" class="summary-item"><span>Всего</span><strong>{{ overview.total }}</strong></a><a href="{% url 'shipments:list' %}?status=запланирована" class="summary-item"><span><i class="legend-dot planned"></i>Ожидают</span><strong>{{ overview.planned }}</strong></a><a href="{% url 'shipments:list' %}?status=погружается" class="summary-item"><span><i class="legend-dot loading"></i>Погружаются</span><strong>{{ overview.loading }}</strong></a><a href="{% url 'shipments:list' %}?status=отгружена" class="summary-item"><span><i class="legend-dot shipped"></i>Отправлены</span><strong>{{ overview.shipped }}</strong></a></div>
+<form method="get" action="{% url 'shipments:list' %}" class="filter-panel" aria-label="Фильтры отгрузок">
+    <div class="filter-panel-heading"><span><svg><use href="#i-filter"></use></svg>Подобрать отгрузки</span>{% if has_filters %}<a class="reset-link" href="{% url 'shipments:list' %}">Сбросить всё</a>{% endif %}</div>
+    <div class="filter-search"><label class="sr-only" for="{{ form.q.id_for_label }}">{{ form.q.label }}</label><svg><use href="#i-search"></use></svg>{{ form.q }}</div>
+    <div class="filter-fields"><div class="form-field"><label for="{{ form.pallets.id_for_label }}">{{ form.pallets.label }}</label>{{ form.pallets }}</div><div class="form-field"><label for="{{ form.status.id_for_label }}">{{ form.status.label }}</label>{{ form.status }}</div><div class="form-field"><label for="{{ form.goods_kind.id_for_label }}">{{ form.goods_kind.label }}</label>{{ form.goods_kind }}</div><div class="form-field"><label for="{{ form.sort.id_for_label }}">{{ form.sort.label }}</label>{{ form.sort }}</div><div class="form-field limit-field"><label for="{{ form.limit.id_for_label }}">{{ form.limit.label }}</label>{{ form.limit }}</div><button class="button button-primary filter-submit" type="submit">Применить <svg><use href="#i-arrow"></use></svg></button></div>
+    {% if form.errors %}<div class="form-errors" role="alert"><strong>Проверьте параметры фильтра.</strong>{% for field in form %}{% for error in field.errors %}<p>{{ field.label }}: {{ error }}</p>{% endfor %}{% endfor %}</div>{% endif %}
+</form>
+<div class="results-heading"><p>Найдено: <strong>{{ matched_count }}</strong><span class="results-divider">/</span>Показано: <strong>{{ shipments|length }}</strong></p><div class="view-controls" aria-label="Вид списка"><button class="icon-button selected" type="button" data-view="grid" aria-label="Карточки" aria-pressed="true"><svg><use href="#i-grid"></use></svg></button><button class="icon-button" type="button" data-view="list" aria-label="Компактный список" aria-pressed="false"><svg><use href="#i-list"></use></svg></button></div></div>
+<section class="shipment-grid" data-shipment-grid aria-label="Список отгрузок">
+{% for shipment in shipments %}
+    {% include 'shipments/includes/shipment_card.html' %}
+{% empty %}
+    <div class="empty-state"><span class="empty-icon"><svg><use href="#i-search"></use></svg></span>{% if form.errors %}<h2>Параметры требуют внимания</h2><p>Исправьте отмеченные значения и примените фильтр ещё раз.</p>{% elif has_filters %}<h2>Отгрузки не найдены</h2><p>Попробуйте уменьшить минимум палет или выбрать другой статус.</p><a class="button button-secondary" href="{% url 'shipments:list' %}">Сбросить фильтры</a>{% else %}<h2>Отгрузок пока нет</h2><p>Добавленные партии появятся в этом списке.</p>{% endif %}</div>
+{% endfor %}
+</section>
+{% if shipments %}<div class="list-end"><span></span>Все выбранные отгрузки перед вами<span></span></div>{% endif %}
+{% endblock %}

@@ -1,0 +1,4 @@
+{% extends 'base.html' %}
+{% block title %}Страница не найдена{% endblock %}
+{% block breadcrumb %}Страница не найдена{% endblock %}
+{% block content %}<section class="error-page"><span class="error-code">404</span><span class="empty-icon"><svg><use href="#i-box"></use></svg></span><h1>Здесь пока пусто<span class="heading-dot">.</span></h1><p>Такой отгрузки или страницы не существует.<br>Проверьте адрес или вернитесь к списку партий.</p><a class="button button-primary" href="{% url 'shipments:list' %}">К отгрузкам <svg><use href="#i-arrow"></use></svg></a><a class="text-link" href="{% url 'homepage:home' %}">На главную</a></section>{% endblock %}

@@ -1,0 +1,6 @@
+<article class="shipment-card">
+    <div class="card-top"><span class="cargo-icon {% if shipment.goods_kind == 'мебель' %}cargo-furniture{% elif shipment.goods_kind == 'одежда' %}cargo-clothes{% endif %}"><svg><use href="#i-box"></use></svg></span><span class="card-id">ОТГ-{{ shipment.id|stringformat:'03d' }}</span>{% include 'shipments/includes/status.html' %}</div>
+    <div class="card-content"><span class="goods-label">{{ shipment.goods_kind|upper }}</span><h3><a href="{% url 'shipments:detail' shipment.slug %}" title="{{ shipment.title }}">{{ shipment.title|truncatechars:30 }}</a></h3>
+    <div class="card-meta"><span><svg><use href="#i-calendar"></use></svg>{{ shipment.ship_date|date:'d.m.Y' }} <span class="meta-time">{{ shipment.ship_date|date:'H:i' }}</span></span><span><svg><use href="#i-clock"></use></svg>{{ shipment.duration }} мин</span></div></div>
+    <div class="card-footer"><div class="card-dock"><svg><use href="#i-dock"></use></svg>{{ shipment.dock_name|default:'Док не указан' }}</div><span class="pallet-count"><strong>{{ shipment.pallets }}</strong> палет</span><a class="card-arrow" href="{% url 'shipments:detail' shipment.slug %}" aria-label="Открыть отгрузку: {{ shipment.title }}"><svg><use href="#i-arrow"></use></svg></a></div>
+</article>

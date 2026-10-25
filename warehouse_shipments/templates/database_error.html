@@ -1,0 +1,4 @@
+{% extends 'base.html' %}
+{% block title %}Данные временно недоступны{% endblock %}
+{% block breadcrumb %}Данные недоступны{% endblock %}
+{% block content %}<section class="error-page"><span class="error-code">503</span><span class="empty-icon"><svg><use href="#i-dock"></use></svg></span><h1>Небольшая остановка<span class="heading-dot">.</span></h1><p>Не удалось получить данные склада.<br>Попробуйте обновить страницу немного позже.</p><button class="button button-primary" type="button" data-reload><svg><use href="#i-refresh"></use></svg>Попробовать ещё раз</button><a class="text-link" href="{% url 'homepage:home' %}">На главную</a></section>{% endblock %}

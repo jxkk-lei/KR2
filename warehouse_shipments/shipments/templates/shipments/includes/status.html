@@ -1,0 +1,9 @@
+{% if shipment.status == 'запланирована' %}
+<span class="status status-planned"><span class="status-dot"></span>Ожидает погрузки</span>
+{% elif shipment.status == 'погружается' %}
+<span class="status status-loading"><span class="status-dot"></span>Погрузка идёт</span>
+{% elif shipment.status == 'отгружена' %}
+<span class="status status-shipped"><svg><use href="#i-check"></use></svg>Отправлена</span>
+{% else %}
+<span class="status">{{ shipment.status|default:'Статус не указан' }}</span>
+{% endif %}

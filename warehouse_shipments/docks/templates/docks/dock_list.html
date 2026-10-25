@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}Доки{% endblock %}
+{% block breadcrumb %}Доки{% endblock %}
+{% block content %}
+<div class="page-heading"><div><div class="eyebrow">ИНФРАСТРУКТУРА СКЛАДА</div><h1>Доки<span class="heading-dot">.</span></h1><p>Точки приёма, погрузки и отправления ваших грузов.</p></div><span class="page-counter"><svg><use href="#i-dock"></use></svg>{{ docks|length }} в системе</span></div>
+<section class="dock-summary"><div><span class="metric-icon"><svg><use href="#i-dock"></use></svg></span><p>Всего доков<strong>{{ dock_overview.total }}</strong></p></div><div><span class="metric-icon amber"><svg><use href="#i-truck"></use></svg></span><p>Общая вместимость<strong>{{ dock_overview.capacity }} <small>машино­мест</small></strong></p></div><p class="dock-summary-note">От приёма до отправки.<br>У каждого груза — свой маршрут.</p></section>
+<div class="section-heading"><div><h2>Все доки</h2><p>Вместимость и текущая активность.</p></div></div>
+<section class="dock-grid" aria-label="Список доков">
+{% for dock in docks %}
+<article class="dock-card"><div class="dock-card-top"><span class="dock-large-icon"><svg><use href="#i-dock"></use></svg></span><span class="dock-kind">{{ dock.dock_kind|capfirst }}</span></div><h2>{{ dock.name }}</h2><p class="dock-description">{% if dock.dock_kind == 'приём' %}Приём и разгрузка поступлений{% elif dock.dock_kind == 'отгрузка' %}Подготовка и отправка грузов{% else %}Прямое перемещение между рейсами{% endif %}</p><div class="dock-capacity"><strong>{{ dock.capacity }}</strong><span>машино­мест</span><span class="dock-capacity-icon"><svg><use href="#i-truck"></use></svg></span></div><div class="dock-facts"><div><span>Всего отгрузок</span><strong>{{ dock.shipment_count }}</strong></div><div><span>Палет в отгрузках</span><strong>{{ dock.total_pallets }}</strong></div></div><div class="dock-card-bottom">{% if dock.loading_count %}<span class="dock-activity"><i></i>Погрузка идёт</span><span>{{ dock.loading_count }} в работе</span>{% else %}<span class="dock-activity idle"><i></i>Нет активной погрузки</span>{% endif %}</div></article>
+{% empty %}<div class="empty-state"><svg><use href="#i-dock"></use></svg><h3>Доки ещё не добавлены</h3><p>Здесь появятся доки, их назначение и вместимость.</p></div>{% endfor %}
+</section>
+<div class="info-strip"><svg><use href="#i-info"></use></svg><p>Информация об отгрузках каждого дока доступна в карточках партий.</p><a class="text-link" href="{% url 'shipments:list' %}">К отгрузкам <svg><use href="#i-arrow"></use></svg></a></div>
+{% endblock %}

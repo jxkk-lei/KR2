@@ -1,0 +1,4 @@
+{% extends 'base.html' %}
+{% block title %}Не удалось открыть страницу{% endblock %}
+{% block breadcrumb %}Страница недоступна{% endblock %}
+{% block content %}<section class="error-page"><span class="error-code">500</span><h1>Не удалось открыть страницу<span class="heading-dot">.</span></h1><p>Пожалуйста, попробуйте ещё раз немного позже.</p><a class="button button-primary" href="{% url 'homepage:home' %}">На главную <svg><use href="#i-arrow"></use></svg></a></section>{% endblock %}
